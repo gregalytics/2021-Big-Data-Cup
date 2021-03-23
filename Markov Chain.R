@@ -89,11 +89,6 @@ transition_matrix[is.na(transition_matrix)] <- 0
 row_absorption_i <- which(transition_matrix$play_state %in% absorption_states)
 col_absorption_i <- which(colnames(transition_matrix) %in% absorption_states)
 
-# Can now use the general form of the transition matrix for absorbing Markov
-# chain with n transient states and r absorbing states to calculate the 
-# absorption probabilities and expected number of plays until absorption:
-
-
 # Grab the Q matrix - n x n transition matrix for transient states:
 q_matrix <- as.matrix(transition_matrix[1:(row_absorption_i[1] - 1),
                                            2:(col_absorption_i[1] - 1)])
@@ -104,7 +99,6 @@ r_matrix <- as.matrix(transition_matrix[1:(row_absorption_i[1] - 1),
 # Calculate the fundamental matrix - (I-Q)**(-1)
 fundamental_matrix <- solve(diag(nrow = nrow(q_matrix),
                                  ncol = nrow(q_matrix)) - q_matrix)
-
 
 ## Results ----
 
@@ -121,7 +115,7 @@ absorption_df <- as.data.frame(prob_absorption) %>%
          playsection = substr(play_state, 6, nchar(play_state))) %>% 
   as_tibble() 
 
-# Record maximum number of 
+# Record maximum absorption probabilities for goals and possession changes
 absorption_df[colnames(absorption_df) %in% absorption_states] %>% 
   gather(absorbing_state, absorbing_prob) %>%
   group_by(absorbing_state) %>%
